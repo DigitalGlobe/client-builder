@@ -172,5 +172,37 @@
         </plugins>
       </build>
     </profile>
+      <profile>
+          <id>develop</id>
+          <distributionManagement>
+              <repository>
+                  <id>central</id>
+                  <name>artifactory-releases</name>
+                  <url>https://dgrad.jfrog.io/dgrad/biz-develop-release</url>
+              </repository>
+              <snapshotRepository>
+                  <id>snapshots</id>
+                  <name>artifactory-snapshots</name>
+                  <url>https://dgrad.jfrog.io/dgrad/biz-develop-snapshot</url>
+                  <uniqueVersion>false</uniqueVersion>
+              </snapshotRepository>
+          </distributionManagement>
+      </profile>
+      <profile>
+          <id>master</id>
+          <distributionManagement>
+              <repository>
+                  <id>central</id>
+                  <name>artifactory-releases</name>
+                  <url>https://dgrad.jfrog.io/dgrad/biz-master-release</url>
+              </repository>
+              <snapshotRepository>
+                  <id>snapshots</id>
+                  <name>artifactory-snapshots</name>
+                  <url>https://dgrad.jfrog.io/dgrad/biz-master-snapshot</url>
+                  <uniqueVersion>false</uniqueVersion>
+              </snapshotRepository>
+          </distributionManagement>
+      </profile>
   </profiles>
 </project>
