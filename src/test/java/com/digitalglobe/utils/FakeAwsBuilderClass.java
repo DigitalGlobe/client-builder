@@ -19,6 +19,11 @@ public class FakeAwsBuilderClass {
         return this;
     }
 
+    public FakeAwsBuilderClass withRegion(String region) {
+
+        return this;
+    }
+
     public FakeAwsClass build() {
 
         return new FakeAwsClass();

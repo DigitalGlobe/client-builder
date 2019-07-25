@@ -31,6 +31,21 @@ public class ClientBuilderTests {
         new ClientBuilder<FakeAwsClass>().build(FakeAwsBuilderClass.class, provider);
     }
 
+    @Test(groups=("functional"))
+    public void regionCredentialBuilderTest() {
+
+        AWSCredentials credentials = new BasicSessionCredentials("x", "y", "z");
+        AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(credentials);
+
+        new ClientBuilder<FakeAwsClass>().withRegion("us-east-1").build(FakeAwsBuilderClass.class, provider);
+    }
+
+    @Test(groups=("functional"))
+    public void regionBuilderTest() {
+
+        new ClientBuilder<FakeAwsClass>().withRegion("us-east-1").build(FakeAwsBuilderClass.class);
+    }
+
     @Test(groups = {"integration"})
     public void s3ClientTest() {
 
@@ -61,6 +76,6 @@ public class ClientBuilderTests {
                 credentials.getSessionToken()));
 
         // Test a S3 client with credentials.
-        client = new ClientBuilder<AmazonS3>().build(AmazonS3ClientBuilder.class, sessionCredentials);
+        client = new ClientBuilder<AmazonS3>().withRegion("us-east-1").build(AmazonS3ClientBuilder.class, sessionCredentials);
     }
 }

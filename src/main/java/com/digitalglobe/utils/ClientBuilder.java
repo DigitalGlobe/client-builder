@@ -1,6 +1,7 @@
 package com.digitalglobe.utils;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -10,6 +11,21 @@ import java.lang.reflect.Modifier;
  * @param <InterfaceType> is the class type for the Amazon Web Service Client to be constructed.
  */
 public class ClientBuilder<InterfaceType> {
+
+    private String region = null;
+
+    /**
+     * Set the region to use.
+     *
+     * @param region is the region to use.
+     * @return a copy of the instance for initialization chaining.
+     */
+    public ClientBuilder<InterfaceType> withRegion(String region) {
+
+        this.region = region;
+
+        return this;
+    }
 
     /**
      * Use this method to build a default client for the specified AWS client.
@@ -24,15 +40,19 @@ public class ClientBuilder<InterfaceType> {
 
         try {
 
-            Method method = staticBuilderClass.getDeclaredMethod("defaultClient");
-            if (method != null && Modifier.isStatic(method.getModifiers())) {
+            if(region != null) build(staticBuilderClass, null);
+            else {
 
-                method.setAccessible(true);
-                result = (InterfaceType)method.invoke((Object)null);
+                Method method = staticBuilderClass.getDeclaredMethod("defaultClient");
+                if (method != null && Modifier.isStatic(method.getModifiers())) {
 
-            } else {
+                    method.setAccessible(true);
+                    result = (InterfaceType) method.invoke((Object) null);
 
-                throw new RuntimeException("Couldn't find static defaultClient method.");
+                } else {
+
+                    throw new RuntimeException("Couldn't find static defaultClient method.");
+                }
             }
 
         } catch (RuntimeException rte) {
@@ -70,26 +90,42 @@ public class ClientBuilder<InterfaceType> {
                 Object factory = method.invoke((Object)null);
                 if (factory != null && factory.getClass().isAssignableFrom(staticBuilderClass)) {
 
-                    method = factory.getClass().getMethod("withCredentials", AWSCredentialsProvider.class);
+                    if(credentials != null) {
+
+                        method = factory.getClass().getMethod("withCredentials", AWSCredentialsProvider.class);
+                        if (method == null) {
+
+                            throw new RuntimeException("Couldn't find withCredentials method.");
+                        }
+
+                        method.invoke(factory, credentials);
+                    }
+
+                    if(region != null) {
+
+                        method = factory.getClass().getMethod("withRegion", String.class);
+
+                        if(method == null) {
+
+                            throw new RuntimeException("Couldn't find the withRegion method.");
+                        }
+
+                        method.invoke(factory, region);
+                    }
+
+                    method = factory.getClass().getMethod("build", (Class[])null);
+
                     if (method == null) {
 
-                        throw new RuntimeException("Couldn't find withCredentials method.");
+                        throw new RuntimeException("Couldn't find the build method.");
 
                     } else {
 
-                        method.invoke(factory, credentials);
-                        method = factory.getClass().getMethod("build", (Class[])null);
-
-                        if (method == null) {
-
-                            throw new RuntimeException("Couldn't find the build method.");
-
-                        } else {
-
-                            result = (InterfaceType)method.invoke(factory, (Object[])null);
-                        }
+                        result = (InterfaceType)method.invoke(factory, (Object[])null);
                     }
+
                 } else {
+
                     throw new RuntimeException("Unexpected return type from standard method.");
                 }
 
