@@ -40,7 +40,7 @@ public class ClientBuilder<InterfaceType> {
 
         try {
 
-            if(region != null) build(staticBuilderClass, null);
+            if(!region.isEmpty()) result = build(staticBuilderClass, null);
             else {
 
                 Method method = staticBuilderClass.getDeclaredMethod("defaultClient");
