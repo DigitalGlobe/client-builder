@@ -12,7 +12,7 @@ import java.lang.reflect.Modifier;
  */
 public class ClientBuilder<InterfaceType> {
 
-    private String region = null;
+    private String region = "";
 
     /**
      * Set the region to use.
@@ -101,7 +101,7 @@ public class ClientBuilder<InterfaceType> {
                         method.invoke(factory, credentials);
                     }
 
-                    if(region != null) {
+                    if(!region.trim().isEmpty()) {
 
                         method = factory.getClass().getMethod("withRegion", String.class);
 
