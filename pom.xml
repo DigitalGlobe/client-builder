@@ -6,7 +6,7 @@
 
     <groupId>com.digitalglobe.utils</groupId>
     <artifactId>client-builder</artifactId>
-    <version>1.2.6</version>
+    <version>1.2.7</version>
 
     <name>client-builder</name>
     <url>http://www.digitalglobe.com</url>
@@ -30,7 +30,7 @@
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-bom</artifactId>
-                <version>1.11.621</version>
+                <version>1.11.686</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
