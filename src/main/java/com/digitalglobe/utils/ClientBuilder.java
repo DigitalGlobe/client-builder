@@ -1,6 +1,7 @@
 package com.digitalglobe.utils;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -30,28 +31,27 @@ public class ClientBuilder<InterfaceType> {
     /**
      * Use this method to build a default client for the specified AWS client.
      *
-     * @param staticBuilderClass is the static builder class to use when building the client.
+     * @param staticClass is the static class to use when building the client.
      * @return a newly constructed client.
      * @throws RuntimeException when the method can't find or invoke the default client.
      */
-    public InterfaceType build(Class staticBuilderClass) throws RuntimeException {
+    public InterfaceType build(Class staticClass) throws RuntimeException {
 
         InterfaceType result = null;
 
         try {
 
-            if(!region.isEmpty()) result = build(staticBuilderClass, null);
+            if(!region.isEmpty()) result = build(staticClass, null);
             else {
 
-                Method method = staticBuilderClass.getDeclaredMethod("defaultClient");
+                Method method = staticClass.getDeclaredMethod("create");
                 if (method != null && Modifier.isStatic(method.getModifiers())) {
 
-                    method.setAccessible(true);
                     result = (InterfaceType) method.invoke((Object) null);
 
                 } else {
 
-                    throw new RuntimeException("Couldn't find static defaultClient method.");
+                    throw new RuntimeException("Couldn't find static create method.");
                 }
             }
 
@@ -63,7 +63,7 @@ public class ClientBuilder<InterfaceType> {
 
             System.out.println(ex.getMessage());
             ex.printStackTrace();
-            throw new RuntimeException("Couldn't invoke static defaultClient method.", ex);
+            throw new RuntimeException("Couldn't invoke create method.", ex);
         }
 
         return result;
@@ -72,30 +72,29 @@ public class ClientBuilder<InterfaceType> {
     /**
      * Use this method when you want to construct and Amazon Web Service Client using credentials.
      *
-     * @param staticBuilderClass is the static builder class for the Amazon Web Service Client
+     * @param staticClass is the static builder class for the Amazon Web Service Client
      * @param credentials are the credentials to use when with the newly constructed client.
      * @return the newly constructed client.
      * @throws RuntimeException when the method can't find the withCredentials or build methods or can't execute them.
      */
-    public InterfaceType build(Class staticBuilderClass, AWSCredentialsProvider credentials) throws RuntimeException {
+    public InterfaceType build(Class staticClass, AwsCredentialsProvider credentials) throws RuntimeException {
 
         InterfaceType result = null;
 
         try {
 
-            Method method = staticBuilderClass.getDeclaredMethod("standard");
+            Method method = staticClass.getDeclaredMethod("builder");
             if (method != null && Modifier.isStatic(method.getModifiers())) {
 
-                method.setAccessible(true);
                 Object factory = method.invoke((Object)null);
-                if (factory != null && factory.getClass().isAssignableFrom(staticBuilderClass)) {
+                if (factory != null) {
 
                     if(credentials != null) {
 
-                        method = factory.getClass().getMethod("withCredentials", AWSCredentialsProvider.class);
+                        method = factory.getClass().getMethod("credentialsProvider", AwsCredentialsProvider.class);
                         if (method == null) {
 
-                            throw new RuntimeException("Couldn't find withCredentials method.");
+                            throw new RuntimeException("Couldn't find credentialsProvider method.");
                         }
 
                         method.invoke(factory, credentials);
@@ -103,14 +102,14 @@ public class ClientBuilder<InterfaceType> {
 
                     if(!region.trim().isEmpty()) {
 
-                        method = factory.getClass().getMethod("withRegion", String.class);
+                        method = factory.getClass().getMethod("region", Region.class);
 
                         if(method == null) {
 
-                            throw new RuntimeException("Couldn't find the withRegion method.");
+                            throw new RuntimeException("Couldn't find the region method.");
                         }
 
-                        method.invoke(factory, region);
+                        method.invoke(factory, Region.of(region));
                     }
 
                     method = factory.getClass().getMethod("build", (Class[])null);
