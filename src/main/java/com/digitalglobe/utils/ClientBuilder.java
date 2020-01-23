@@ -125,12 +125,12 @@ public class ClientBuilder<InterfaceType> {
 
                 } else {
 
-                    throw new RuntimeException("Unexpected return type from standard method.");
+                    throw new RuntimeException("Unexpected return type from builder method.");
                 }
 
             } else {
 
-                throw new RuntimeException("Couldn't find static standard method.");
+                throw new RuntimeException("Couldn't find static builder method.");
             }
 
         } catch (RuntimeException rte) {
@@ -139,7 +139,7 @@ public class ClientBuilder<InterfaceType> {
 
         } catch (Exception ex) {
 
-            throw new RuntimeException("Couldn't invoke static standard method.", ex);
+            throw new RuntimeException("Couldn't invoke static builder method.", ex);
         }
 
         return result;
