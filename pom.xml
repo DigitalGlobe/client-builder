@@ -18,7 +18,7 @@
     </scm>
 
     <properties>
-        <awssdk.version>2.10.55</awssdk.version>
+        <awssdk.version>2.10.56</awssdk.version>
         <dependency.locations.enabled>false</dependency.locations.enabled>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
