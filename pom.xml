@@ -183,14 +183,14 @@
             <id>develop</id>
             <distributionManagement>
                 <repository>
-                    <id>central</id>
+                    <id>releases</id>
                     <name>artifactory-releases</name>
-                    <url>https://dgrad.jfrog.io/dgrad/biz-develop-release</url>
+                    <url>https://artpro.digitalglobe.com:443/artifactory/basemaps-develop-release</url>
                 </repository>
                 <snapshotRepository>
                     <id>snapshots</id>
                     <name>artifactory-snapshots</name>
-                    <url>https://dgrad.jfrog.io/dgrad/biz-develop-snapshot</url>
+                    <url>https://artpro.digitalglobe.com:443/artifactory/basemaps-develop-snapshot</url>
                     <uniqueVersion>false</uniqueVersion>
                 </snapshotRepository>
             </distributionManagement>
@@ -199,14 +199,14 @@
             <id>master</id>
             <distributionManagement>
                 <repository>
-                    <id>central</id>
+                    <id>releases</id>
                     <name>artifactory-releases</name>
-                    <url>https://dgrad.jfrog.io/dgrad/biz-master-release</url>
+                    <url>https://artpro.digitalglobe.com:443/artifactory/basemaps-release</url>
                 </repository>
                 <snapshotRepository>
                     <id>snapshots</id>
                     <name>artifactory-snapshots</name>
-                    <url>https://dgrad.jfrog.io/dgrad/biz-master-snapshot</url>
+                    <url>https://artpro.digitalglobe.com:443/artifactory/basemaps-snapshot</url>
                     <uniqueVersion>false</uniqueVersion>
                 </snapshotRepository>
             </distributionManagement>
